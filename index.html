@@ -77,9 +77,10 @@
 
         #sommaireBtn {
             display: block;
-            position: relative;
-            margin: 20px auto;
-            text-align: center;
+            position: relative; /* par défaut position normale */
+            margin: 20px 0 20px 2rem; /* marge top/bottom 20px, à gauche 2rem, pas centré */
+            text-align: left; /* texte aligné à gauche */
+            max-width: 180px; /* limite largeur pour éviter trop grand */
         }
 
         #sommaireBtn button {
@@ -92,6 +93,8 @@
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(241, 196, 15, 0.6);
             transition: transform 0.2s, box-shadow 0.3s, background-color 0.3s;
+            width: 100%; /* bouton prend toute la largeur dispo */
+            box-sizing: border-box;
         }
 
         #sommaireBtn button:hover {
@@ -108,7 +111,7 @@
             color: #f1c40f;
         }
 
-        @media (max-width: 600px) {
+        @media screen and (max-width: 640px) {
             body {
                 padding: 10px;
             }
@@ -117,15 +120,30 @@
                 padding: 15px;
             }
 
+            #sommaireBtn {
+                position: relative; /* normal */
+                margin: 20px auto;
+                max-width: 50%;
+                text-align: center;
+
+            }
+
+            #sommaireBtn button {
+                font-size: 18px;
+                padding: 12px 20px;
+
+            }
+
         }
 
-        @media (min-width: 600px) {
+        @media screen and (min-width: 640px) {
             #sommaireBtn {
                 position: absolute;
                 top: 50%;
-                left: 10rem;
+                left: 3rem;
                 transform: translateY(-50%);
-                margin: 10rem;
+                margin: 0; /* on supprime la marge classique */
+                max-width: 180px;
             }
         }
 
@@ -235,7 +253,7 @@
     <button type="button" onclick="save()">Enregistrer</button>
 </form>
 
-<a href="table.html" target="_blank" id="sommaireBtn"><button type="button">Sommaire</button></a>
+<a href="Table/table.html" target="_blank" id="sommaireBtn"><button type="button">Sommaire</button></a>
 
 <footer>Damien Laville, 2025 @ Copyright</footer>
 

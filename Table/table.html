@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Sommaire</title>
+    <meta name="author" content="Damien Laville">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script> // On utilise defer pour éviter de modifier le DOM avant d'avoir fini le parsing HTML
+</head>
+<body>
+
+<h1>Sommaire</h1>
+
+<div class="sort">
+    <label for="startDate">Du :</label>
+    <input type="date" id="startDate">
+
+    <label for="endDate">au :</label>
+    <input type="date" id="endDate">
+
+    <button onclick="applyDateFilter()">Filtrer</button>
+    <button onclick="resetDateFilter()">Réinitialiser</button>
+</div>
+
+<div class="table-container">
+    <table>
+        <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Priorité</th>
+            <th>Temps</th>
+            <th>Catégorie</th>
+            <th>Difficulté</th>
+            <th>Date Limite</th>
+            <th>Avancement</th>
+        </tr>
+        </thead>
+        <tbody id="tableBody">
+        <!-- Lignes générées dynamiquement sont insérées ici -->
+        </tbody>
+    </table>
+</div>
+
+<a href="../index.html" target="_blank" id="sommaireBtn">
+    <button type="button">Retour</button>
+</a>
+</body>
+</html>
