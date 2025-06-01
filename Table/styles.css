@@ -87,6 +87,14 @@ tr:hover {
     color: #2c3e50;
 }
 
+footer {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+    color: #f1c40f;
+}
+
 #sommaireBtn {
     display: block;
     margin: 3rem 3rem;

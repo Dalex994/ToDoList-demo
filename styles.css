@@ -69,10 +69,10 @@ button:hover {
 
 #sommaireBtn {
     display: block;
-    position: relative; /* par défaut position normale */
-    margin: 20px 0 20px 2rem; /* marge top/bottom 20px, à gauche 2rem, pas centré */
-    text-align: left; /* texte aligné à gauche */
-    max-width: 180px; /* limite largeur pour éviter trop grand */
+    position: relative;
+    margin: 20px 0 20px 2rem;
+    text-align: left;
+    max-width: 180px;
 }
 
 #sommaireBtn button {

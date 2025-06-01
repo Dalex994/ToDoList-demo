@@ -17,6 +17,8 @@ let dataString = localStorage.getItem("tasks");
 
 if (dataString != null) {
     tasksList = JSON.parse(dataString);
+
+    // On initialise les tâches une à une, comme de l'unpacking (parseInt() car on parse des String pas des integers
     tasksList = tasksList.map((task, index) => ({
         ...task,
         id: task.id ?? index,
@@ -55,6 +57,8 @@ function generateTable() {
             if (dateFilter.end && taskDate > new Date(dateFilter.end)) return;
         }
 
+
+        // Générations des boutons d'avancement
         let status = ["En attente", "En cours", "Terminé"];
         let statutButtons = status.map(st => {
             const isCurrent = item.statut === st;
@@ -88,6 +92,8 @@ function generateTable() {
         // Vérifie si expirée (avant aujourd'hui) et pas terminée
         const isExpired = isDateBeforeToday(item.dateLimite) && item.statut !== "Terminé";
 
+
+        // Génération de l'HTML de la table
         tableHTML += `<tr data-status="${item.statut}">
                                       <td>${item.Tache}</td>
                                       <td>${prioriteText}</td>
@@ -100,6 +106,8 @@ function generateTable() {
 
     document.getElementById("tableBody").insertAdjacentHTML(`beforeend`, tableHTML);
 
+
+    // On met à jour les boutons de statut
     document.querySelectorAll('.statut-btn').forEach(btn => {
         btn.addEventListener("click", function () {
             const taskId = parseInt(this.dataset.taskid);
