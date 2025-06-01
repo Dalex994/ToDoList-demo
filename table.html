@@ -50,6 +50,17 @@
             background: rgba(241, 196, 15, 0.6);
         }
 
+        select {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #2ecc71; /* Bright green border color */
+            border-radius: 5px;
+            width: calc(100% - 20px);
+            background-color: #2c3e50; /* Dark green background color */
+            color: #f1c40f; /* Bright yellow text color */
+            margin-bottom: 10px;
+            text-align: center;
+        }
 
 
 
@@ -110,6 +121,30 @@
             box-shadow: 0 0 15px rgba(241, 196, 15, 0.8);
         }
 
+        .statut-btn {
+            margin: 2px;
+            padding: 6px 10px;
+            font-size: 12px;
+            border: 1px solid #f1c40f;
+            background-color: transparent;
+            color: #f1c40f;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .statut-btn:hover:not(:disabled) {
+            background-color: #f1c40f;
+            color: #2c3e50;
+        }
+
+        .statut-btn.active {
+            background-color: #27ae60;
+            color: white;
+            cursor: default;
+            font-weight: bold;
+        }
+
 
         @media (max-width: 600px) {
             th, td {
@@ -122,6 +157,8 @@
                 padding: 12px 20px;
             }
         }
+
+
     </style>
 
     <script>
@@ -138,12 +175,14 @@
 
         if (dataString != null) {
             tasksList = JSON.parse(dataString);
-            tasksList = tasksList.map(task => ({
+            tasksList = tasksList.map((task, index) => ({
                 ...task,
+                id: task.id ?? index,
                 idPriorite: parseInt(task.idPriorite),
                 idTemps: parseInt(task.idTemps),
                 idCategorie: parseInt(task.idCategorie),
-                idDifficulte: parseInt(task.idDifficulte)
+                idDifficulte: parseInt(task.idDifficulte),
+                statut: task.statut || "en attente" // par défaut
             }));
 
         }
@@ -156,19 +195,33 @@
             }
         };
 
-        console.log(tasksList);
+        console.log(tasksList); // DEBUG
         
         function generateTable() {
             document.getElementById("tableBody").innerHTML = "";
             
             let tableHTML = ``;
+
             tasksList.forEach(function (item, index) {
 
+                if (!item.statut) item.statut = "En attente";
+
+                if (item.statut === "Terminé") return;
+
+                let status = ["En attente", "En cours", "Terminé"];
+                let statutButtons = status.map(st => {
+                    const isCurrent = item.statut === st;
+                    return `<button type="button"
+                                    class="statut-btn ${isCurrent ? "active" : ""}"
+                                    data-taskid="${item.id}"
+                                    data-newstatut="${st}"
+                                    ${isCurrent ? 'disabled' : ''}
+                                    >${st}</button>`;
+                }).join(" ");
+
                 // Priorite
-                // let searchedPriorite = item.idPriorite;
                 let foundPriorite = listePriorites.find(priorityElement => priorityElement.idPriorite===item.idPriorite);
                 // Temps
-                // let searchedTemps = item.idTemps;
                 let foundTemps = listeTemps.find(timeElement => timeElement.idTemps===item.idTemps);
                 // Categorie
                 let foundCategorie = listeCategories.find(categoryElement => categoryElement.idCategorie===item.idCategorie);
@@ -176,17 +229,45 @@
                 let foundDifficulte = listeDifficultes.find(difficulteElement => difficulteElement.idDifficulte===item.idDifficulte);
 
 
+                // Debug / Placeholder
                 let prioriteText = foundPriorite?.priorite || "Inconnu";
                 let tempsText = foundTemps?.temps || "Inconnu";
                 let categorieText = foundCategorie?.categorie || "Inconnu";
                 let difficulteText = foundDifficulte?.difficulte || "Inconnu";
 
-                    tableHTML += `<tr><td>${item.Tache}</td><td>${prioriteText}</td><td>${tempsText}</td><td>${categorieText}</td><td>${difficulteText}</td><td>${item.dateLimite}</td></tr>`
+
+                tableHTML += `<tr data-status="${item.statut}">
+                                      <td>${item.Tache}</td>
+                                      <td>${prioriteText}</td>
+                                      <td>${tempsText}</td>
+                                      <td>${categorieText}</td>
+                                      <td>${difficulteText}</td>
+                                      <td>${item.dateLimite}</td>
+                                      <td>${statutButtons}</td></tr>`;
             });
-            
+
             document.getElementById("tableBody").insertAdjacentHTML(`beforeend`, tableHTML);
+
+            document.querySelectorAll('.statut-btn').forEach(btn => {
+                btn.addEventListener("click", function () {
+                    const taskId = parseInt(this.dataset.taskid);
+                    const newStatut = this.dataset.newstatut;
+                    updateTaskStatus(taskId, newStatut);
+                });
+            });
         }
 
+        function updateTaskStatus(taskId, newStatut) {
+            const task = tasksList.find(t => t.id === taskId);
+            if (!task) {
+                console.error("Tâche introuvable pour ID:", taskId);
+                return;
+            }
+
+            task.statut = newStatut;
+            localStorage.setItem("tasks", JSON.stringify(tasksList));
+            generateTable();
+        }
 
 
     </script>
@@ -207,6 +288,7 @@
             <th>Catégorie</th>
             <th>Difficulté</th>
             <th>Date Limite</th>
+            <th>Avancement</th>
         </tr>
         </thead>
         <tbody id="tableBody">
